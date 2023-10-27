@@ -1,0 +1,16 @@
+{
+    "FOOD": {"is_expenditure": 1},
+    "TECHNOLOGY": {"is_expenditure": 1},
+    "COMMUTING": {"is_expenditure": 1},
+    "ENTERTAINMENT": {"is_expenditure": 1},
+    "HOUSEHOLD-ITEMS": {"is_expenditure": 1},
+    "HOBBIES": {"is_expenditure": 1},
+    "LIVING": {"is_expenditure": 1},
+    "UNCATEGORIZED": {"is_expenditure": 1},
+    "HEALTH": {"is_expenditure": 1},
+    "CLOTHING": {"is_expenditure": 1},
+    "INVESTING": {"is_expenditure": 1},
+    "OTHER-INCOME": {"is_expenditure": 0},
+    "SALARY": {"is_expenditure": 0},
+    "": {"is_expenditure": -1}
+}

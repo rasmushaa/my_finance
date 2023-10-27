@@ -1,0 +1,21 @@
+{
+    "OP": {
+        "columns": [
+            "Kirjauspäivä",
+            "Arvopäivä",
+            "Määrä EUROA",
+            "Laji",
+            "Selitys",
+            "Saaja/Maksaja",
+            "Saajan tilinumero",
+            "Saajan pankin BIC",
+            "Viite",
+            "Viesti",
+            "Arkistointitunnus"
+        ],
+        "date_column": "Kirjauspäivä",
+        "date_format": "%Y-%m-%d",
+        "amount_column": "Määrä EUROA",
+        "receiver_column": "Saaja/Maksaja"
+    }
+}

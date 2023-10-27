@@ -1,0 +1,8 @@
+{
+    "Rasmus": {
+        "bq_account": "rasmus.haapaniemi@outlook.com",
+        "bq_project": "rasmus-prod",
+        "table_transactions": "personal_finance.transactions",
+        "table_assets": "personal_finance.assets"
+    }
+}
