@@ -20,9 +20,7 @@ class Message(QtWidgets.QMessageBox):
 
         if 'y' in buttons and 'n' in buttons:
             self.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel) 
-        elif 'y' in buttons:
+        elif 'y' in buttons and 'n' not in buttons:
             self.setStandardButtons(QtWidgets.QMessageBox.Ok) 
-        elif 'n' in buttons:
+        elif 'n' in buttons and 'y' not in buttons:
             self.setStandardButtons(QtWidgets.QMessageBox.Cancel) 
-
-    

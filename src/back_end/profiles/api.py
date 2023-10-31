@@ -14,7 +14,7 @@ class ProfileApi():
         profiles = self._load_profiles_json()
         return [name for name in profiles]
     
-    def get_profile_class(self, target_name: str):
+    def get_user_class(self, target_name: str):
         profiles = self._load_profiles_json()
         for name in profiles:
             if name == target_name:

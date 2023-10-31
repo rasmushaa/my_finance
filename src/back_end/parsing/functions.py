@@ -50,16 +50,16 @@ def process_pandas(df: pd.DataFrame) -> pd.DataFrame:
     if pandas_in_known_files(df_temp):
         file_type = get_pandas_file_type(df_temp)
         df_temp = df_temp[[file_type['date_column'], file_type['receiver_column'], file_type['amount_column']]]
-        df_temp = df_temp.rename({file_type['date_column']: 'Date',
-                                  file_type['receiver_column']: 'Receiver', 
-                                  file_type['amount_column']: 'Amount'}, axis=1) 
-        df_temp['Date'] = pd.to_datetime(df_temp['Date'], format=file_type['date_format'])
-        df_temp['Date'] = df_temp['Date'].dt.date.astype(str)
-        df_temp['Amount'] = df_temp['Amount'].astype(str).str.replace(',', '.')
-        df_temp = df_temp.astype({'Amount': 'float'})
-        df_temp = df_temp.astype({'Receiver': 'str'})
-        df_temp['Category'] = ''
-        df_temp = df_temp.astype({'Category': 'str'})
+        df_temp = df_temp.rename({file_type['date_column']: 'date',
+                                  file_type['receiver_column']: 'receiver', 
+                                  file_type['amount_column']: 'amount'}, axis=1) 
+        df_temp['date'] = pd.to_datetime(df_temp['date'], format=file_type['date_format'])
+        df_temp['date'] = df_temp['date'].dt.date.astype(str)
+        df_temp['amount'] = df_temp['amount'].astype(str).str.replace(',', '.')
+        df_temp = df_temp.astype({'amount': 'float'})
+        df_temp = df_temp.astype({'receiver': 'str'})
+        df_temp['category'] = ''
+        df_temp = df_temp.astype({'category': 'str'})
         df_temp = df_temp.fillna("")    
         return df_temp
     else:

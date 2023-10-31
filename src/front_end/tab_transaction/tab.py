@@ -7,6 +7,8 @@ import pandas as pd
 from .dialog import FileParsingDialog
 from .table import FinanceTableView
 from src.back_end import parsing
+from src.back_end.bigquery import BqApi
+from src.back_end.profiles import ProfileApi
 from src.front_end.utils import Message
 
 
@@ -19,25 +21,23 @@ class TabTransaction(QtWidgets.QWidget):
     
     def _init_window(self):
         grid = QtWidgets.QGridLayout() 
-
-        self.label = QtWidgets.QLabel()
-        self.label.setText('<user_name>')
-        grid.addWidget(self.label, 0, 0, 1, 1)
+        # User
+        self._user_name = QtWidgets.QLabel()
+        self._user_name.setText('<user_name>')
+        grid.addWidget(self._user_name, 0, 0, 1, 1)
         grid.setColumnStretch(0, 1)
-
-        self.start_button = QtWidgets.QPushButton('Upload Data', self)
-        self.start_button.setFont(Qt.QFont('Times', 18))
-        """ self.start_button.setFixedHeight(90)
-        self.start_button.setFixedWidth(300) """
-        #self.start_button.clicked.connect(self.btnstate)
-        grid.addWidget(self.start_button, 0, 1, 1, 1)
-
+        # Push button
+        self._start_button = QtWidgets.QPushButton('Upload Data', self)
+        self._start_button.setFont(Qt.QFont('Roboto', 18))
+        self._start_button.clicked.connect(self._push_data)
+        grid.addWidget(self._start_button, 0, 1, 1, 1)
+        # Table
         self.table = FinanceTableView()
         hbox = Qt.QHBoxLayout()
         hbox.addWidget(self.table)
         grid.addLayout(hbox, 1, 0, 1, 2)
         grid.setRowStretch(1, 1)
-
+        # Grid
         self.setLayout(grid)
 
 
@@ -47,6 +47,23 @@ class TabTransaction(QtWidgets.QWidget):
             self._set_table_model(df_temp)
         else:
             self._add_file_type(df_temp)
+
+    def _push_data(self):
+        def run_command():
+            BqApi().push_pd_to_bq(df=df, tabel=user.table_transactions, project=user.bq_project)
+            Message(msg=f'Command inserted {df.shape[0]} new rows\n to {user.bq_project}.{user.table_transactions}', type='info', buttons='y').exec_()
+
+        df = self.table.model.get_df()
+        user = ProfileApi().get_user_class(target_name='dev')
+        latest_date = BqApi().get_latest_date(tabel=user.table_transactions, project=user.bq_project)
+        min_date = pd.to_datetime(df['date'].min(), format='%Y-%m-%d')
+        if latest_date < min_date:
+            run_command()
+        else:
+            dialog = Message(msg=f'Warning\nThere already exists data before {min_date:%Y-%m-%d}!\nProceed anyway?', type='warning', buttons='yn')
+            if dialog.exec_() == QtWidgets.QMessageBox.Ok:
+                print('accepted')
+                run_command()
 
 
     def _set_table_model(self, df_temp: pd.DataFrame):

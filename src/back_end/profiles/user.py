@@ -5,6 +5,5 @@ class User():
         self.name = name
         self.bq_account = bq_account
         self.bq_project = bq_project
-        self.dataset = table_transactions.split('.')[0]
-        self.table_transactions = table_transactions.split('.')[1]
-        self.table_assets = table_assets.split('.')[1]
+        self.table_transactions = table_transactions
+        self.table_assets = table_assets
