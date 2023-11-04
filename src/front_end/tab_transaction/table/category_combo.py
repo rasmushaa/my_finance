@@ -2,7 +2,7 @@
 
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
-from back_end.categories import CategoriesApi 
+from src.back_end.categories import CategoriesApi 
 
 class MyView(QtWidgets.QListView):
     def __init__(self, parent):

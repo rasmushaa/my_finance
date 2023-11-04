@@ -6,10 +6,10 @@ from PyQt5.QtCore       import Qt, QThread, pyqtSignal
 from PyQt5.Qt import QDial, QSlider, QHBoxLayout, QPushButton, QFont, QMessageBox, QObject, QInputDialog
 from .dialog.add_profile import AddProfileDialog
 from .dialog.remove_profile import RemoveProfileDialog
-from front_end.tab_transaction import TabTransaction
-from back_end.profiles import ProfileApi
-from back_end.ml import MlApi
-from back_end.bigquery import BqApi
+from src.front_end.tab_transaction import TabTransaction
+from src.back_end.profiles import ProfileApi
+from src.back_end.ml import MlApi
+from src.back_end.bigquery import BqApi
 
 
 class GUI(QtWidgets.QMainWindow):

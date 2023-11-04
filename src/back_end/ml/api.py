@@ -2,10 +2,16 @@
 
 import pandas as pd
 import pickle
-import os
 from .model_beta import NB
+import os
+import sys
 
-REAL_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
+try:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+    BASE_PATH = sys._MEIPASS
+except Exception:
+    BASE_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
+
 
 class MlApi():
     def __init__(self):
@@ -23,7 +29,7 @@ class MlApi():
 
     def load_model(self, name: str):
         self._model = None
-        with open(f'{REAL_PATH}/_model_{name}.pkl', 'rb') as f:
+        with open(f'{BASE_PATH}/_model_{name}.pkl', 'rb') as f:
             model = pickle.load(f)
         self._model = model
 
@@ -38,5 +44,5 @@ class MlApi():
 
         model = NB()
         model.fit(X_string, X_numeric, y)
-        with open(f'{REAL_PATH}/_model_{name}.pkl', 'wb') as f:
+        with open(f'{BASE_PATH}/_model_{name}.pkl', 'wb') as f:
             pickle.dump(model, f)

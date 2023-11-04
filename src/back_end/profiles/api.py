@@ -1,11 +1,17 @@
 
 
-import os
 import json
 from .user import User
+import os
+import sys
 
-REAL_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
-FILE_NAME = '_profiles'
+try:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+    BASE_PATH = sys._MEIPASS
+except Exception:
+    BASE_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
+
+FILE_NAME = '_profiles.json'
 
 
 class ProfileApi():
@@ -34,7 +40,7 @@ class ProfileApi():
                 }
         profiles = self._load_profiles_json()
         data.update(profiles)
-        with open(f'{REAL_PATH}/{FILE_NAME}.json', 'w', encoding='utf-8') as f:
+        with open(f'{BASE_PATH}/{FILE_NAME}', 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
     def remove_profile(self, target_name: str):
@@ -50,10 +56,10 @@ class ProfileApi():
                                 }
                             }
                 data.update(user_info)
-        with open(f'{REAL_PATH}/{FILE_NAME}.json', 'w', encoding='utf-8') as f:
+        with open(f'{BASE_PATH}/{FILE_NAME}', 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
     def _load_profiles_json(self):
-        with open(f'{REAL_PATH}/{FILE_NAME}.json') as f:
+        with open(f'{BASE_PATH}/{FILE_NAME}') as f:
             profiles = json.load(f)
         return profiles

@@ -6,11 +6,11 @@ from PyQt5 import QtCore
 import pandas as pd
 from .dialog import FileParsingDialog
 from .table import FinanceTableView
-from front_end.utils import Message
-from back_end import parsing
-from back_end.bigquery import BqApi
-from back_end.profiles import ProfileApi
-from back_end.ml import MlApi
+from src.front_end.utils import Message
+from src.back_end import parsing
+from src.back_end.bigquery import BqApi
+from src.back_end.profiles import ProfileApi
+from src.back_end.ml import MlApi
 
 
 class TabTransaction(QtWidgets.QWidget):
@@ -73,7 +73,7 @@ class TabTransaction(QtWidgets.QWidget):
         try:
             self.ml_api.load_model(name=value)
         except FileNotFoundError:
-            dialog = Message(msg=f'Warning\nML model could bot be loaded\nfor user: "{value}"\nProceeding without...', type='warning', buttons='y')
+            dialog = Message(msg=f'Warning\nML model could not be loaded\nfor user: "{value}"\nProceeding without...', type='warning', buttons='y')
             dialog.exec_()
 
     def _load_data(self, links: list[str]):
@@ -95,7 +95,7 @@ class TabTransaction(QtWidgets.QWidget):
         if latest_date < min_date:
             run_command()
         else:
-            dialog = Message(msg=f'Warning\nThere already exists data before {min_date:%Y-%m-%d}!\nProceed anyway?', type='warning', buttons='yn')
+            dialog = Message(msg=f'Warning\nThere already exists data after {min_date:%Y-%m-%d}!\nProceed anyway?', type='warning', buttons='yn')
             if dialog.exec_() == QtWidgets.QMessageBox.Ok:
                 run_command()
 

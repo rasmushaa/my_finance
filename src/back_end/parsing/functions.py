@@ -5,9 +5,15 @@ import chardet
 import csv
 import json
 import os
+import sys
 
+try:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+    BASE_PATH = sys._MEIPASS
+except Exception:
+    BASE_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
 
-REAL_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
+FILE_NAME = '_file_types.json'
 
 
 def csv_to_pandas(path: str):
@@ -20,7 +26,7 @@ def csv_to_pandas(path: str):
 
 
 def pandas_in_known_files(df: pd.DataFrame) -> bool:
-    with open(f'{REAL_PATH}/_file_types.json') as f:
+    with open(f'{BASE_PATH}/{FILE_NAME}') as f:
         file_types = json.load(f)
     for name in file_types:
         if sorted(df.columns.values.tolist()) == sorted(file_types[name]['columns']):
@@ -38,10 +44,10 @@ def add_pandas_to_known_files(df: pd.DataFrame, name: str, date_column: str, dat
                 'receiver_column': receiver_column
                 }
             }
-    with open(f'{REAL_PATH}/_file_types.json') as f:
+    with open(f'{BASE_PATH}/{FILE_NAME}') as f:
         old_data = json.load(f)
     data.update(old_data)
-    with open(f'{REAL_PATH}/_file_types.json', 'w', encoding='utf-8') as f:
+    with open(f'{BASE_PATH}/{FILE_NAME}', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 
@@ -67,7 +73,7 @@ def process_pandas(df: pd.DataFrame) -> pd.DataFrame:
     
 
 def get_pandas_file_type(df: pd.DataFrame) -> json:
-    with open(f'{REAL_PATH}/_file_types.json') as f:
+    with open(f'{BASE_PATH}/{FILE_NAME}') as f:
         file_types = json.load(f)
     for name in file_types:
         if sorted(df.columns.values.tolist()) == sorted(file_types[name]['columns']):
