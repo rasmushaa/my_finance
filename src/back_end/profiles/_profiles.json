@@ -1,8 +1,12 @@
 {
-    "dev": {
-        "bq_account": "rasmus.haapaniemi@outlook.com",
+    "stg": {
         "bq_project": "rasmus-prod",
-        "table_transactions": "dev.transactions",
-        "table_assets": "dev.assets"
+        "table_transactions": "stg.transactions",
+        "table_assets": "stg.assets"
+    },
+    "dev": {
+        "bq_project": "rasmus-prod",
+        "table_transactions": "dev.trans",
+        "table_assets": "dev.asset"
     }
 }

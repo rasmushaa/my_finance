@@ -2,7 +2,7 @@
 
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
-from src.back_end import categories
+from back_end.categories import CategoriesApi 
 
 class MyView(QtWidgets.QListView):
     def __init__(self, parent):
@@ -26,7 +26,7 @@ class CategoryCombo(QtWidgets.QComboBox):
         self._parent = parent
         self._row = row
         self.addItems([''])
-        self.currentIndexChanged.connect(self.update_value)
+        #self.currentIndexChanged.connect(self.update_value)
         self.setView(MyView(parent=self))
         self.keyPressEvent = self._custom_navigation
         self._inital_value = self.currentText()
@@ -36,18 +36,28 @@ class CategoryCombo(QtWidgets.QComboBox):
         self._parent.update_model(self.currentText(), row=self._row)
 
 
-    def update_category_list(self, current_categories: list):
+    def set_prediction_categories(self, category_list: list):
         self.clear()
-        self.addItems(categories.get_transaction_list())
+        self.addItems(category_list)
+
+    def set_default_categories(self):
+        self.clear()
+        self.addItems(CategoriesApi().get_transaction_list())
     
 
     def _custom_navigation(self, event):
         if event.key() == QtCore.Qt.Key_Left:
-            self.setCurrentText(self._inital_value)
+            if self._inital_value in {self.itemText(i) for i in range(self.count())}:
+                self.setCurrentText(self._inital_value)
+            else:
+                self.set_default_categories()
+                self.setCurrentText(self._inital_value)
             self._parent.set_focus_off_category()
         elif event.key() == QtCore.Qt.Key_Return:
             self._inital_value = self.currentText()
+            self._parent.update_model(self.currentText(), row=self._row)
             self._parent.set_focus_off_category()
         elif event.key() == QtCore.Qt.Key_Right:
+            self.set_default_categories()
             self.showPopup()
         return QtWidgets.QComboBox.keyPressEvent(self, event) # Passthrough all default key events

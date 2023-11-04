@@ -4,16 +4,15 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 import pandas as pd
 from .model import PandasModel
-from .category import CategoryCombo
+from .category_combo import CategoryCombo
 
 
 class FinanceTableView(QtWidgets.QTableView):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self._parent = parent
+        self.window = parent
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.keyPressEvent = self._custom_navigation
-        
 
     def set_model(self, df: pd.DataFrame):
         self.df = df
@@ -29,11 +28,10 @@ class FinanceTableView(QtWidgets.QTableView):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
-
+        
 
     def update_model(self, value: str, row: int):
         self.model.update(value, row)
-        print(self.model.get_df())
 
 
     def get_category_at(self, row: int):
@@ -48,11 +46,17 @@ class FinanceTableView(QtWidgets.QTableView):
     def set_focus_on_category(self):
         def get_index_widget ():
             return self.indexWidget(self.model.index(self.currentIndex().row(), self.model.columnCount()-1))
-        get_index_widget().update_category_list(self.model.get_df_col(self.model.columnCount()-1).values)
+        self.clearFocus()
+        receiver = self.model.get_value_at(self.currentIndex().row(), self.model.columnCount()-3)
+        preds_list_dict = self.window.ml_api.predict(receiver)
+        preds_dict = preds_list_dict[0]
+        preds = preds_dict.keys()
+        get_index_widget().set_prediction_categories(preds)
         get_index_widget().setFocus()
 
 
     def _custom_navigation(self, event):
-        if event.key() == QtCore.Qt.Key_Right:
-            self.set_focus_on_category()
-        return QtWidgets.QTableWidget.keyPressEvent(self, event) # Passthrough all default key events
+        if self.hasFocus():
+            if event.key() == QtCore.Qt.Key_Right:
+                self.set_focus_on_category()
+            return QtWidgets.QTableWidget.keyPressEvent(self, event) # Passthrough all default key events

@@ -43,8 +43,8 @@ class PandasModel(QtCore.QAbstractTableModel):
 			return QtCore.QVariant()
 		return QtCore.QVariant(str(self._df.iloc[index.row(), index.column()]))
 	
-	def get_value_at(self, row: int, col: int):
-		return self._df.iloc[row, col]
+	def get_value_at(self, rows: int, cols: int):
+		return self._df.iloc[[rows], [cols]]
 	
 	def get_df(self):
 		return self._df

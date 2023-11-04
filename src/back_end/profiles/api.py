@@ -19,16 +19,14 @@ class ProfileApi():
         for name in profiles:
             if name == target_name:
                 return User(name=name, 
-                            bq_account=profiles[name]['bq_account'],
                             bq_project=profiles[name]['bq_project'],
                             table_transactions=profiles[name]['table_transactions'],
                             table_assets=profiles[name]['table_assets']
                             )
             
-    def add_profile(self, name: str, bq_account: str, bq_project: str, table_transactions: str, table_assets: str):
+    def add_profile(self, name: str, bq_project: str, table_transactions: str, table_assets: str):
         data = {f'{name}':
                     {
-                    'bq_account': bq_account, 
                     'bq_project': bq_project,
                     'table_transactions': table_transactions,
                     'table_assets': table_assets
@@ -46,7 +44,6 @@ class ProfileApi():
             if name != target_name:
                 user_info = {f'{name}':
                                 {
-                                'bq_account': profiles[name]['bq_account'], 
                                 'bq_project': profiles[name]['bq_project'],
                                 'table_transactions': profiles[name]['table_transactions'],
                                 'table_assets': profiles[name]['table_assets']

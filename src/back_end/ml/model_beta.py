@@ -1,9 +1,7 @@
 
 
-import pandas as pd
 import numpy as np
 import re
-
 
 class NB():
     def __init__(self):

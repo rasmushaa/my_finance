@@ -1,1 +1,1 @@
-from .tab import TabTransaction
+from .window import TabTransaction
