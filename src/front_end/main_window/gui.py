@@ -8,10 +8,11 @@ from PyQt5.QtWidgets    import QWidget, QMenu, QAction, QProgressBar, QLabel, QF
 from PyQt5.QtCore       import Qt, QThread, pyqtSignal
 from PyQt5.Qt import QDial, QSlider, QHBoxLayout, QPushButton, QFont, QMessageBox, QObject, QInputDialog
 from .dialog.add_profile import AddProfileDialog
-from .dialog.remove_profile import RemoveProfileDialog
+from .dialog.selection_from_list import SelectionDialog
 from src.front_end.tab_transaction import TabTransaction
 from src.front_end.utils import Message
 from src.back_end.profiles import ProfileApi
+from src.back_end.parsing import FileParsingApi
 from src.back_end.ml import MlApi
 from src.back_end.bigquery import BqApi
 
@@ -92,6 +93,11 @@ class GUI(QtWidgets.QMainWindow):
         action = QAction('&Remove profile', self)
         action.triggered.connect(self._remove_profile) 
         menu_profiles.addAction(action)
+        # Banking
+        menu_bank = menu_main.addMenu("&Banking")
+        action = QAction('&Remove file', self)
+        action.triggered.connect(self._remove_banking_file) 
+        menu_bank.addAction(action)
         # Ml
         menu_ml = menu_main.addMenu("&Model")
         action = QAction('&Train', self)
@@ -116,15 +122,24 @@ class GUI(QtWidgets.QMainWindow):
 
     def _remove_profile(self):
         values = ProfileApi().get_profile_names()
-        file_dialog = RemoveProfileDialog(items=values, parent=self)
+        file_dialog = SelectionDialog(items=values, parent=self)
         if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
                 name = file_dialog.selected_items()
                 ProfileApi().remove_profile(target_name=name)
                 self._init_menu_bar()
+                self._init_tabs()
+
+    def _remove_banking_file(self):
+        values = FileParsingApi().get_known_files()
+        file_dialog = SelectionDialog(items=values, parent=self)
+        if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
+                name = file_dialog.selected_items()
+                FileParsingApi().remove_known_file(filename=name)
+                self._init_menu_bar()
 
     def _train_model(self):
          user = ProfileApi().get_user_class(target_name=self.get_active_user())
-         sql = f"SELECT receiver, category FROM {user.table_transactions}"
+         sql = f"SELECT receiver, category FROM {user.table_transactions} WHERE category != ''"
          df = BqApi().pull_pd_from_bq(sql, project=user.bq_project)
          MlApi().train_new_model(data=df, target_col='category', name=self.get_active_user())
          Message(msg=f'A new ML model trained for user "{self.get_active_user()}"\nusing {df.shape[0]} rows from {user.table_transactions}', type='info', buttons='y').exec_()

@@ -49,19 +49,9 @@ class ProfileApi():
 
     def remove_profile(self, target_name: str):
         profiles = self._load_profiles_json()
-        data ={}
-        for name in profiles:
-            if name != target_name:
-                user_info = {f'{name}':
-                                {
-                                'bq_project': profiles[name]['bq_project'],
-                                'table_transactions': profiles[name]['table_transactions'],
-                                'table_assets': profiles[name]['table_assets']
-                                }
-                            }
-                data.update(user_info)
+        profiles.pop(target_name, None)
         with open(f'{BASE_PATH}/{FILE_NAME}', 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+            json.dump(profiles, f, ensure_ascii=False, indent=4)
 
     def _load_profiles_json(self):
         try:

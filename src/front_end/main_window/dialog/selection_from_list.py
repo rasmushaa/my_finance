@@ -2,15 +2,15 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
 
-class RemoveProfileDialog(QtWidgets.QDialog):
+class SelectionDialog(QtWidgets.QDialog):
     def __init__(self, items, parent):
-        super(RemoveProfileDialog, self).__init__(parent=parent)
+        super(SelectionDialog, self).__init__(parent=parent)
 
         """ 
                 print(parent.rect().bottomLeft())
                 print(parent.rect().center()) """
 
-        self.setWindowTitle('Remove Profile')
+        #self.setWindowTitle('Remove Profile')
         self.resize(100, 100)
 
         grid = QtWidgets.QGridLayout() 

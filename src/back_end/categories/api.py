@@ -9,7 +9,6 @@ try:
     BASE_PATH = sys._MEIPASS
 except Exception:
     BASE_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
-
 FILE_NAME = '_categories.json'
 
 

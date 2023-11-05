@@ -7,7 +7,7 @@ import pandas as pd
 from .dialog import FileParsingDialog
 from .table import FinanceTableView
 from src.front_end.utils import Message
-from src.back_end import parsing
+from src.back_end.parsing import FileParsingApi
 from src.back_end.bigquery import BqApi
 from src.back_end.profiles import ProfileApi
 from src.back_end.ml import MlApi
@@ -59,8 +59,8 @@ class TabTransaction(QtWidgets.QWidget):
 
 
     def _load_data(self, links: list[str]):
-        df_temp = parsing.csv_to_pandas(links[0])
-        if parsing.pandas_in_known_files(df_temp):
+        df_temp = FileParsingApi().csv_to_pandas(links[0])
+        if FileParsingApi().pandas_in_known_files(df_temp):
             self._set_table_model(df_temp)
         else:
             self._add_file_type(df_temp)
@@ -83,7 +83,7 @@ class TabTransaction(QtWidgets.QWidget):
 
 
     def _set_table_model(self, df_temp: pd.DataFrame):
-        df = parsing.process_pandas(df_temp)
+        df = FileParsingApi().process_pandas(df_temp)
         self.table.set_model(df)
         user = self.gui.get_active_user()
         try:
@@ -102,7 +102,7 @@ class TabTransaction(QtWidgets.QWidget):
                     msg = Message(msg='Warning!\nFile columns must be uniquely identifiable', type='warning', buttons='y')
                     msg.exec_()
                 else:
-                    parsing.add_pandas_to_known_files(df_temp, 
+                    FileParsingApi().add_pandas_to_known_files(df_temp, 
                                                         name=user_selections['name'],
                                                         date_column=user_selections['date_column'],
                                                         date_format=user_selections['date_format'],
