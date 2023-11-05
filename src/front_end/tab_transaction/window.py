@@ -77,7 +77,7 @@ class TabTransaction(QtWidgets.QWidget):
         if latest_date < min_date:
             run_command()
         else:
-            dialog = Message(msg=f'Warning\nThere already exists data after {min_date:%Y-%m-%d}!\nProceed anyway?', type='warning', buttons='yn')
+            dialog = Message(msg=f'Warning\nThere already exists data after {min_date:%Y-%m-%d}\nProceed anyway?', type='warning', buttons='yn')
             if dialog.exec_() == QtWidgets.QMessageBox.Ok:
                 run_command()
 

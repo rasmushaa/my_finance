@@ -1,22 +1,27 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 added_files = [
-('src/back_end/*.json',   '.'),
+('src/back_end/categories/*.json',   '.'),
+('src/back_end/parsing/*.json',   '.'),
+('src/back_end/profiles/*.json',   '.'),
 ]
+
 
 
 a = Analysis(
     ['main.py'],
-    pathex=[],
+    pathex=['.', '/Users/rasmus/opt/miniconda3/envs/my_finance/lib/python3.10/site-packages'],
     binaries=[],
     datas=added_files,
-    hiddenimports=[],
+    hiddenimports=['pandas_gbq'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
     noarchive=False,
 )
+
+
 pyz = PYZ(a.pure)
 
 exe = EXE(
@@ -35,7 +40,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['src/assets/logo.icns'],
+    icon=['src/assets/images/logo.icns']
 )
 coll = COLLECT(
     exe,
@@ -49,6 +54,7 @@ coll = COLLECT(
 app = BUNDLE(
     coll,
     name='main.app',
-    icon='src/assets/logo.icns',
+    icon='src/assets/images/logo.icns',
     bundle_identifier=None,
+    version='1.0.1'
 )

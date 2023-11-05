@@ -53,7 +53,7 @@ class GUI(QtWidgets.QMainWindow):
     def _init_window(self):
         (ax, ay, aw, ah) = self._state['geometry']
         self.setGeometry(ax, ay, aw, ah)
-        self.setWindowTitle(f'My Finance 0.00')  
+        self.setWindowTitle(f'My Finance')  
         self.show()
 
     def _set_initial_user(self):
