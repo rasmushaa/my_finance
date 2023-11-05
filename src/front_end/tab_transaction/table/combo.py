@@ -26,7 +26,7 @@ class CategoryCombo(QtWidgets.QComboBox):
         self._parent = parent
         self._row = row
         self.addItems([''])
-        #self.currentIndexChanged.connect(self.update_value)
+        self.currentTextChanged.connect(self.update_value)
         self.setView(MyView(parent=self))
         self.keyPressEvent = self._custom_navigation
         self._inital_value = self.currentText()
@@ -50,7 +50,7 @@ class CategoryCombo(QtWidgets.QComboBox):
             if self._inital_value in {self.itemText(i) for i in range(self.count())}:
                 self.setCurrentText(self._inital_value)
             else:
-                self.set_default_categories()
+                self.addItems([''])
                 self.setCurrentText(self._inital_value)
             self._parent.set_focus_off_category()
         elif event.key() == QtCore.Qt.Key_Return:

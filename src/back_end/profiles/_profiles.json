@@ -1,12 +1,12 @@
 {
-    "stg": {
+    "DEV": {
         "bq_project": "rasmus-prod",
-        "table_transactions": "stg.transactions",
-        "table_assets": "stg.assets"
+        "table_transactions": "finance_dev.transactions",
+        "table_assets": "finance_dev.assets"
     },
-    "dev": {
+    "PROD": {
         "bq_project": "rasmus-prod",
-        "table_transactions": "dev.trans",
-        "table_assets": "dev.asset"
+        "table_transactions": "finance.transactions",
+        "table_assets": "finance.assets"
     }
 }

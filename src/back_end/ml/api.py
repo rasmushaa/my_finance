@@ -24,7 +24,7 @@ class MlApi():
         if self._model is not None:
             return self._model.predict(X_string, X_numeric)
         else:
-            return [{'Model Not set': -1}]
+            return [{'': 1}]
 
 
     def load_model(self, name: str):

@@ -25,21 +25,18 @@ class TabTransaction(QtWidgets.QWidget):
     def _init_window(self):
         grid = QtWidgets.QGridLayout() 
         # User
-        gbox = QtWidgets.QGroupBox('User Selection')
         vbox = Qt.QVBoxLayout()
-        self._user_selector = QtWidgets.QComboBox(self)
-        self._user_selector.addItems(ProfileApi().get_profile_names()) 
-        self._user_selector.currentTextChanged.connect(self._update_user)
-        vbox.addWidget(self._user_selector)
-        hbox = Qt.QHBoxLayout()
-        self._user_transaction_path = QtWidgets.QLabel()
-        hbox.addWidget(self._user_transaction_path)
-        self._user_assets_path = QtWidgets.QLabel()
-        hbox.addWidget(self._user_assets_path)
-        self._update_user(self._user_selector.currentText())
-        vbox.addLayout(hbox)
-        gbox.setLayout(vbox)
-        grid.addWidget(gbox, 0, 0, 1, 1)
+        user_name = self.gui.get_active_user()
+        user = ProfileApi().get_user_class(target_name=user_name)
+        user_label = QtWidgets.QLabel(user_name)
+        user_label.setFont(Qt.QFont('Roboto', 22))
+        vbox .addWidget(user_label)
+        transaction_path = user.table_transactions
+        transaction_path = f"{transaction_path.split('.')[0]} - {transaction_path.split('.')[1]}"
+        transaction_label = QtWidgets.QLabel(transaction_path)
+        transaction_label.setFont(Qt.QFont('Roboto', 16))
+        vbox .addWidget(transaction_label)
+        grid.addLayout(vbox , 0, 0, 1, 1)
         grid.setColumnStretch(0, 3)
         # Empty col
         grid.setColumnStretch(1, 4)
@@ -60,21 +57,6 @@ class TabTransaction(QtWidgets.QWidget):
         # Grid
         self.setLayout(grid)
 
-    def _update_user(self, value):
-        user = ProfileApi().get_user_class(target_name=value)
-        project = user.bq_project
-        text = f"{project}: {user.table_transactions.split('.')[0]}-{user.table_transactions.split('.')[1]}, "
-        self._user_transaction_path.setText(text)
-        self._user_transaction_path.setFont(Qt.QFont('Roboto', 15))
-        text = f"{user.table_assets.split('.')[0]}-{user.table_assets.split('.')[1]}"
-        self._user_assets_path.setText(text)
-        self._user_assets_path.setFont(Qt.QFont('Roboto', 15))
-        self.gui.update_active_user(user=value)
-        try:
-            self.ml_api.load_model(name=value)
-        except FileNotFoundError:
-            dialog = Message(msg=f'Warning\nML model could not be loaded\nfor user: "{value}"\nProceeding without...', type='warning', buttons='y')
-            dialog.exec_()
 
     def _load_data(self, links: list[str]):
         df_temp = parsing.csv_to_pandas(links[0])
@@ -103,6 +85,12 @@ class TabTransaction(QtWidgets.QWidget):
     def _set_table_model(self, df_temp: pd.DataFrame):
         df = parsing.process_pandas(df_temp)
         self.table.set_model(df)
+        user = self.gui.get_active_user()
+        try:
+            self.ml_api.load_model(name=user)
+        except FileNotFoundError:
+            dialog = Message(msg=f'Warning\nML model could not be loaded\nfor user: "{user}"\nProceeding without...', type='warning', buttons='y')
+            dialog.exec_()
 
 
     def _add_file_type(self, df_temp: pd.DataFrame):
