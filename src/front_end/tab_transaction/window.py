@@ -109,10 +109,6 @@ class TabTransaction(QtWidgets.QWidget):
                                                         receiver_column=user_selections['receiver_column'],
                                                         amount_column=user_selections['amount_column'])
                     self._set_table_model(df_temp)
-        else:
-            msg = Message(msg='Warning!\nFile was not added', type='warning', buttons='y')
-            msg.exec_()
-
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:

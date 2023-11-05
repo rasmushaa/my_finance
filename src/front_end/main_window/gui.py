@@ -1,5 +1,8 @@
 
 
+import json
+import sys
+import os
 from PyQt5              import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets    import QWidget, QMenu, QAction, QProgressBar, QLabel, QFileDialog, QTabWidget, QVBoxLayout, QFormLayout, QLineEdit, QCheckBox, QGroupBox, QGridLayout
 from PyQt5.QtCore       import Qt, QThread, pyqtSignal
@@ -12,20 +15,44 @@ from src.back_end.profiles import ProfileApi
 from src.back_end.ml import MlApi
 from src.back_end.bigquery import BqApi
 
+try:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+    BASE_PATH = sys._MEIPASS
+except Exception:
+    BASE_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
+FILE_NAME = '_gui_state.json'
+
 
 class GUI(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self._load_state()
         self._init_window()
         self._init_menu_bar()
         self._set_initial_user()
         self._init_tabs()
+
+    def closeEvent(self, event):
+        self._update_state()
+        with open(f'{BASE_PATH}/{FILE_NAME}', 'w') as f:
+            json.dump(self._state, f, ensure_ascii=False, indent=4)
          
-        
+    def _load_state(self):
+        try:
+            with open(f'{BASE_PATH}/{FILE_NAME}', 'r') as f:
+                self._state = json.load(f)
+        except FileNotFoundError:
+            self._update_state()
+    
+    def _update_state(self):
+        self._state = {}
+        self._state.update({'geometry': self.geometry().getRect()})
+
     def _init_window(self):
-        self.setGeometry(300, 100, 900, 600)
-        self.setWindowTitle(f'My Finance {0.00}')  
+        (ax, ay, aw, ah) = self._state['geometry']
+        self.setGeometry(ax, ay, aw, ah)
+        self.setWindowTitle(f'My Finance 0.00')  
         self.show()
 
     def _set_initial_user(self):
