@@ -1,0 +1,50 @@
+{
+    "UNREALIZED-CAPITAL-LOSSES": {
+        "explanation": "The amount of losses in the period",
+        "order": 0
+    },
+    "CASH": {
+        "order": 11,
+        "explanation": "The amount of actual cash on the account"
+    },
+    "MORTGAGE": {
+        "order": 6,
+        "explanation": "The amount of loan for the house"
+    },
+    "APARTMENT": {
+        "order": 9,
+        "explanation": "Theoretical value of the apartment"
+    },
+    "DIVIDENDS": {
+        "order": 2,
+        "explanation": "Received total dividends"
+    },
+    "OTHER-LOANS": {
+        "order": 8,
+        "explanation": "All other loans combined"
+    },
+    "OTHER-ASSETS": {
+        "order": 10,
+        "explanation": "All other assets, such as cars"
+    },
+    "STUDENT-LOAN": {
+        "order": 5,
+        "explanation": "The amount ofstudent loand"
+    },
+    "CAPITAL-ASSETS-VALUE": {
+        "order": 1,
+        "explanation": "The current market value of all capital assets"
+    },
+    "REALIZED-CAPITAL-GAINS": {
+        "order": 3,
+        "explanation": "The amount of received cahs flow from capital assets"
+    },
+    "UNREALIZED-CAPITAL-GAINS": {
+        "order": 4,
+        "explanation": "Current market value of unrealized capital gains"
+    },
+    "CAPITAL-ASSETS-PURCHASE-PRICE": {
+        "order": 7,
+        "explanation": "The purhcase price of current total capital assets"
+    }
+}

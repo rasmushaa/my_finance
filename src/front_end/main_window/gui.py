@@ -7,12 +7,13 @@ from PyQt5              import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets    import QWidget, QMenu, QAction, QProgressBar, QLabel, QFileDialog, QTabWidget, QVBoxLayout, QFormLayout, QLineEdit, QCheckBox, QGroupBox, QGridLayout
 from PyQt5.QtCore       import Qt, QThread, pyqtSignal
 from PyQt5.Qt import QDial, QSlider, QHBoxLayout, QPushButton, QFont, QMessageBox, QObject, QInputDialog
-from .dialog.add_profile import AddProfileDialog
-from .dialog.selection_from_list import SelectionDialog
+from .dialog import AddProfileDialog, AddAssetDialog, AddTransactionDialog, SelectionDialog
 from src.front_end.tab_transaction import TabTransaction
+from src.front_end.tab_assets import TabAssets
 from src.front_end.utils import Message
 from src.back_end.profiles import ProfileApi
 from src.back_end.parsing import FileParsingApi
+from src.back_end.categories import CategoriesApi
 from src.back_end.ml import MlApi
 from src.back_end.bigquery import BqApi
 
@@ -67,7 +68,7 @@ class GUI(QtWidgets.QMainWindow):
     def _init_tabs(self):
         self.tabs = QTabWidget()
         self.tabs.addTab(TabTransaction(self), 'Transactions')
-        self.tabs.addTab(QWidget(), " 3 ")
+        self.tabs.addTab(TabAssets(self), "Assets")
         self.setCentralWidget(self.tabs)
 
     def get_active_user(self):
@@ -95,12 +96,25 @@ class GUI(QtWidgets.QMainWindow):
         menu_profiles.addAction(action)
         # Banking
         menu_bank = menu_main.addMenu("&Banking")
+        menu_bank_labels = menu_bank.addMenu("&Labels")
+        action = QAction('&Add transaction', self)
+        action.triggered.connect(self._add_transaction) 
+        menu_bank_labels.addAction(action)
+        action = QAction('&Remove transaction', self)
+        action.triggered.connect(self._remove_transaction) 
+        menu_bank_labels.addAction(action)
+        action = QAction('&Add asset', self)
+        action.triggered.connect(self._add_asset) 
+        menu_bank_labels.addAction(action)
+        action = QAction('&Remove asset', self)
+        action.triggered.connect(self._remove_asset) 
+        menu_bank_labels.addAction(action)
         action = QAction('&Remove file', self)
         action.triggered.connect(self._remove_banking_file) 
         menu_bank.addAction(action)
         # Ml
         menu_ml = menu_main.addMenu("&Model")
-        action = QAction('&Train', self)
+        action = QAction('&Train for user', self)
         action.triggered.connect(self._train_model) 
         menu_ml.addAction(action)
 
@@ -129,13 +143,42 @@ class GUI(QtWidgets.QMainWindow):
                 self._init_menu_bar()
                 self._init_tabs()
 
+    def _add_transaction(self):
+        file_dialog = AddTransactionDialog(parent=self)
+        if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
+                inputs = file_dialog.selected_items()
+                CategoriesApi().add_transaction(name=inputs['name'])
+                self._init_tabs()
+
+    def _remove_transaction(self):
+        values = CategoriesApi().get_transaction_list()
+        file_dialog = SelectionDialog(items=values, parent=self)
+        if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
+                name = file_dialog.selected_items()
+                CategoriesApi().remove_transaction(name=name)
+                self._init_tabs()
+
+    def _add_asset(self):
+        file_dialog = AddAssetDialog(parent=self)
+        if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
+                inputs = file_dialog.selected_items()
+                CategoriesApi().add_asset(name=inputs['name'], explanation=inputs['explanation'])
+                self._init_tabs()
+
+    def _remove_asset(self):
+        values = CategoriesApi().get_assets_list()
+        file_dialog = SelectionDialog(items=values, parent=self)
+        if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
+                name = file_dialog.selected_items()
+                CategoriesApi().remove_asset(name=name)
+                self._init_tabs()
+
     def _remove_banking_file(self):
         values = FileParsingApi().get_known_files()
         file_dialog = SelectionDialog(items=values, parent=self)
         if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
                 name = file_dialog.selected_items()
                 FileParsingApi().remove_known_file(filename=name)
-                self._init_menu_bar()
 
     def _train_model(self):
          user = ProfileApi().get_user_class(target_name=self.get_active_user())
@@ -143,4 +186,6 @@ class GUI(QtWidgets.QMainWindow):
          df = BqApi().pull_pd_from_bq(sql, project=user.bq_project)
          MlApi().train_new_model(data=df, target_col='category', name=self.get_active_user())
          Message(msg=f'A new ML model trained for user "{self.get_active_user()}"\nusing {df.shape[0]} rows from {user.table_transactions}', type='info', buttons='y').exec_()
+         probs = MlApi().get_propabilities(name=self.get_active_user())
+         CategoriesApi().update_transaction_list_order(probs)
          self._init_tabs()

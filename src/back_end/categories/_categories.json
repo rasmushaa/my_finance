@@ -1,16 +1,44 @@
 {
-    "FOOD": {"is_expenditure": 1},
-    "COMMUTING": {"is_expenditure": 1},
-    "TECHNOLOGY": {"is_expenditure": 1},
-    "LIVING": {"is_expenditure": 1},
-    "ENTERTAINMENT": {"is_expenditure": 1},
-    "HOBBIES": {"is_expenditure": 1},
-    "HEALTH": {"is_expenditure": 1},
-    "CLOTHING": {"is_expenditure": 1},
-    "HOUSEHOLD-ITEMS": {"is_expenditure": 1},
-    "INVESTING": {"is_expenditure": 1},
-    "UNCATEGORIZED": {"is_expenditure": 1},
-    "OTHER-INCOME": {"is_expenditure": 0},
-    "SALARY": {"is_expenditure": 0},
-    "": {"is_expenditure": -1}
+    "FOOD": {
+        "prior": 0.3743882544861338
+    },
+    "COMMUTING": {
+        "prior": 0.08727569331158239
+    },
+    "TECHNOLOGY": {
+        "prior": 0.09053833605220228
+    },
+    "LIVING": {
+        "prior": 0.05057096247960848
+    },
+    "ENTERTAINMENT": {
+        "prior": 0.07504078303425775
+    },
+    "HOBBIES": {
+        "prior": 0.049755301794453505
+    },
+    "HEALTH": {
+        "prior": 0.03099510603588907
+    },
+    "CLOTHING": {
+        "prior": 0.022838499184339316
+    },
+    "HOUSEHOLD-ITEMS": {
+        "prior": 0.05628058727569331
+    },
+    "INVESTING": {
+        "prior": 0.01794453507340946
+    },
+    "UNCATEGORIZED": {
+        "prior": 0.03507340946166395
+    },
+    "OTHER-INCOME": {
+        "prior": 0.08727569331158239
+    },
+    "SALARY": {
+        "prior": 0.02202283849918434
+    },
+    "": {
+        "prior": 0.0
+    }
 }

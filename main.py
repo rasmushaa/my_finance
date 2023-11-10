@@ -13,7 +13,7 @@ def excepthook(exc_type, exc_value, exc_tb):
 
 
 def main():
-    sys.excepthook = excepthook
+    #sys.excepthook = excepthook
     global qapp
     qapp = QApplication(sys.argv)
     gui = GUI()

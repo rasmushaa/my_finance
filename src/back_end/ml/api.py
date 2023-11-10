@@ -32,6 +32,11 @@ class MlApi():
         with open(f'{BASE_PATH}/_model_{name}.pkl', 'rb') as f:
             model = pickle.load(f)
         self._model = model
+        
+    
+    def get_propabilities(self, name: str):
+        self.load_model(name)
+        return self._model.get_priors()
 
 
     def train_new_model(self, data:pd.DataFrame, target_col:str, name='dev'):
