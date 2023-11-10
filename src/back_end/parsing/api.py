@@ -158,9 +158,9 @@ class FileParsingApi():
             df_temp = df_temp[[file_type['date_column'], file_type['receiver_column'], file_type['amount_column']]]
             df_temp = df_temp.rename({file_type['date_column']: 'date',
                                     file_type['receiver_column']: 'receiver', 
-                                    file_type['amount_column']: 'amount'}, axis=1) 
+                                    file_type['amount_column']: 'amount'}, axis=1)
             df_temp['date'] = pd.to_datetime(df_temp['date'], format=file_type['date_format'])
-            df_temp['date'] = df_temp['date'].dt.date.astype(str)
+            df_temp = df_temp.astype({'date': 'str'})
             df_temp['amount'] = df_temp['amount'].astype(str).str.replace(',', '.')
             df_temp = df_temp.astype({'amount': 'float'})
             df_temp = df_temp.astype({'receiver': 'str'})

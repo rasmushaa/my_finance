@@ -55,4 +55,17 @@ class TabAssets(QtWidgets.QWidget):
 
 
     def _push_data(self):
-        print(self.table.get_df())
+        def run_command():
+            BqApi().push_pd_to_bq(df=df, tabel=user.table_assets, project=user.bq_project)
+            Message(msg=f'Command inserted {df.shape[0]} new rows\n to {user.bq_project}.{user.table_assets}', type='info', buttons='y').exec_()
+
+        df = self.table.get_df()
+        user = ProfileApi().get_user_class(target_name=self.gui.get_active_user())
+        latest_date = BqApi().get_latest_date(tabel=user.table_assets, project=user.bq_project)
+        min_date = pd.to_datetime(df['date'].min(), format='%Y-%m-%d')
+        if latest_date < min_date:
+            run_command()
+        else:
+            dialog = Message(msg=f'Warning\nThere already exists data after {min_date:%Y-%m-%d}\nProceed anyway?', type='warning', buttons='yn')
+            if dialog.exec_() == QtWidgets.QMessageBox.Ok:
+                run_command()

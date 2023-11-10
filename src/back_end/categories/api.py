@@ -3,6 +3,7 @@
 import json
 import os
 import sys
+import pandas as pd
 
 try:
     # PyInstaller creates a temp folder and stores path in _MEIPASS
@@ -34,6 +35,16 @@ class CategoriesApi():
         categories_dict = {key: value['order'] for key, value in categories.items()}
         categories_sorted = {k: v for k, v in sorted(categories_dict.items(), key=lambda item: item[1])}
         return [categories[key]['explanation'] for key in categories_sorted]
+    
+    def get_assets_df(self):
+        df = pd.DataFrame(columns=['date', 'category', 'explanation', 'value'])
+        df['category'] = self.get_assets_list()
+        df['explanation'] = self.get_assets_list_explanations()
+        df = df.astype({'date': 'str'})
+        df = df.astype({'category': 'str'})
+        df = df.astype({'explanation': 'str'})
+        df = df.astype({'value': 'float'})
+        return df
     
     def update_assets_list_order(self, new_data: dict):
         with open(f'{BASE_PATH}/{ASSETS_FILE}') as f:

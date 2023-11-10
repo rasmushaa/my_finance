@@ -8,7 +8,7 @@
         "explanation": "The amount of actual cash on the account"
     },
     "MORTGAGE": {
-        "order": 6,
+        "order": 7,
         "explanation": "The amount of loan for the house"
     },
     "APARTMENT": {
@@ -28,7 +28,7 @@
         "explanation": "All other assets, such as cars"
     },
     "STUDENT-LOAN": {
-        "order": 5,
+        "order": 6,
         "explanation": "The amount ofstudent loand"
     },
     "CAPITAL-ASSETS-VALUE": {
@@ -36,15 +36,15 @@
         "explanation": "The current market value of all capital assets"
     },
     "REALIZED-CAPITAL-GAINS": {
-        "order": 3,
+        "order": 4,
         "explanation": "The amount of received cahs flow from capital assets"
     },
     "UNREALIZED-CAPITAL-GAINS": {
-        "order": 4,
+        "order": 5,
         "explanation": "Current market value of unrealized capital gains"
     },
     "CAPITAL-ASSETS-PURCHASE-PRICE": {
-        "order": 7,
+        "order": 3,
         "explanation": "The purhcase price of current total capital assets"
     }
 }
