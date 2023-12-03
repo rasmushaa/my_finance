@@ -56,5 +56,5 @@ app = BUNDLE(
     name='main.app',
     icon='src/assets/images/logo.icns',
     bundle_identifier=None,
-    version='1.0.1'
+    version='1.1.1'
 )

@@ -1,0 +1,7 @@
+{
+    "PROD": {
+        "bq_project": "rasmus-prod",
+        "table_transactions": "finance.transactions",
+        "table_assets": "finance.assets"
+    }
+}

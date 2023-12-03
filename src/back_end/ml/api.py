@@ -2,7 +2,7 @@
 
 import pandas as pd
 import pickle
-from .model_beta import NB
+from .model_delta import NB
 import os
 import sys
 
@@ -11,6 +11,7 @@ try:
     BASE_PATH = sys._MEIPASS
 except Exception:
     BASE_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
+FILE_NAME = 'model'
 
 
 class MlApi():
@@ -29,9 +30,14 @@ class MlApi():
 
     def load_model(self, name: str):
         self._model = None
-        with open(f'{BASE_PATH}/_model_{name}.pkl', 'rb') as f:
+        with open(f'{BASE_PATH}/{name}_{FILE_NAME }.pkl', 'rb') as f:
             model = pickle.load(f)
         self._model = model
+        
+    
+    def get_propabilities(self, name: str):
+        self.load_model(name)
+        return self._model.get_priors()
 
 
     def train_new_model(self, data:pd.DataFrame, target_col:str, name='dev'):
@@ -44,5 +50,10 @@ class MlApi():
 
         model = NB()
         model.fit(X_string, X_numeric, y)
-        with open(f'{BASE_PATH}/_model_{name}.pkl', 'wb') as f:
+        with open(f'{BASE_PATH}/{name}_{FILE_NAME}.pkl', 'wb') as f:
             pickle.dump(model, f)
+
+    def _delete_user_data(self, user_name: str) -> None:
+        user_file = f'{BASE_PATH}/{user_name}_{FILE_NAME}.pkl'
+        if os.path.isfile(user_file):
+            os.remove(user_file)
