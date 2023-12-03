@@ -8,11 +8,11 @@
         "explanation": "The amount of actual cash on the account"
     },
     "MORTGAGE": {
-        "order": 7,
+        "order": 8,
         "explanation": "The amount of loan for the house"
     },
     "APARTMENT": {
-        "order": 9,
+        "order": 5,
         "explanation": "Theoretical value of the apartment"
     },
     "DIVIDENDS": {
@@ -20,7 +20,7 @@
         "explanation": "Received total dividends"
     },
     "OTHER-LOANS": {
-        "order": 8,
+        "order": 9,
         "explanation": "All other loans combined"
     },
     "OTHER-ASSETS": {
@@ -28,7 +28,7 @@
         "explanation": "All other assets, such as cars"
     },
     "STUDENT-LOAN": {
-        "order": 5,
+        "order": 6,
         "explanation": "The amount ofstudent loand"
     },
     "CAPITAL-ASSETS-VALUE": {
@@ -36,7 +36,7 @@
         "explanation": "The current market value of all capital assets"
     },
     "REALIZED-CAPITAL-GAINS": {
-        "order": 6,
+        "order": 7,
         "explanation": "The amount of received cahs flow from capital assets"
     },
     "UNREALIZED-CAPITAL-GAINS": {

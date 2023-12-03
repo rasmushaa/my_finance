@@ -8,15 +8,16 @@ from src.back_end.categories.api import CategoriesApi
 class AssetsTableView(QtWidgets.QTableView):
     def __init__(self, active_user: str, parent=None):
         super().__init__(parent)
+        self._active_user = active_user
         self.window = parent
-        self._set_model(user_name=active_user)
+        self._set_model()
         self.verticalHeader().setSectionsMovable(True)
         self.verticalHeader().setDragEnabled(True)
         self.verticalHeader().sectionMoved.connect(self._update_indexing)
 
 
-    def _set_model(self, user_name):
-        df = CategoriesApi().get_assets_df(user_name=user_name)
+    def _set_model(self):
+        df = CategoriesApi().get_assets_df(user_name=self._active_user)
         self._model = PandasModel(df)
         self.setModel(self._model)
         
@@ -35,4 +36,4 @@ class AssetsTableView(QtWidgets.QTableView):
         df = self._model.get_df()
         df_dict = df.to_dict()
         order_dict = dict((v,k) for k,v in df_dict['category'].items()) # Swap key values
-        CategoriesApi().update_assets_list_order(order_dict)
+        CategoriesApi().update_assets_list_order(order_dict, user_name=self._active_user)
