@@ -50,5 +50,10 @@ class MlApi():
 
         model = NB()
         model.fit(X_string, X_numeric, y)
-        with open(f'{BASE_PATH}/{name}_{FILE_NAME }.pkl', 'wb') as f:
+        with open(f'{BASE_PATH}/{name}_{FILE_NAME}.pkl', 'wb') as f:
             pickle.dump(model, f)
+
+    def _delete_user_data(self, user_name: str) -> None:
+        user_file = f'{BASE_PATH}/{user_name}_{FILE_NAME}.pkl'
+        if os.path.isfile(user_file):
+            os.remove(user_file)

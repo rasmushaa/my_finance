@@ -99,6 +99,14 @@ class CategoriesApi():
         old_data.pop(name, None)
         self._dump_data(old_data, filename=filename)
 
+    def _delete_user_data(self, user_name: str) -> None:
+        user_file = f'{BASE_PATH}/{user_name}_{ASSETS_FILE}'
+        if os.path.isfile(user_file):
+            os.remove(user_file)
+        user_file = f'{BASE_PATH}/{user_name}_{TRANS_FILE}'
+        if os.path.isfile(user_file):
+            os.remove(user_file)
+
 
     def _sort_json(self, json_dict: dict, order_key: str, reverse: bool = False):
         dict_values = {key: value[order_key] for key, value in json_dict.items()}

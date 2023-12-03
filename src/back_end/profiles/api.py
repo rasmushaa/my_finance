@@ -1,9 +1,12 @@
 
 
 import json
-from .user import User
 import os
 import sys
+from .user import User
+from src.back_end.categories import CategoriesApi
+from src.back_end.ml import MlApi
+
 
 try:
     # PyInstaller creates a temp folder and stores path in _MEIPASS
@@ -54,6 +57,9 @@ class ProfileApi():
         profiles.pop(target_name, None)
         with open(f'{BASE_PATH}/{FILE_NAME}', 'w', encoding='utf-8') as f:
             json.dump(profiles, f, ensure_ascii=False, indent=4)
+        CategoriesApi()._delete_user_data(user_name=target_name)
+        MlApi()._delete_user_data(user_name=target_name)
+        
 
     def _load_profiles_json(self):
         try:

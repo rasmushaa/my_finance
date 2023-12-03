@@ -152,6 +152,7 @@ class GUI(QtWidgets.QMainWindow):
         if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
                 name = file_dialog.selected_items()
                 ProfileApi().remove_profile(target_name=name)
+                self._set_initial_user()
                 self._init_menu_bar()
                 self._init_tabs()
 
