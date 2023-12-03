@@ -12,7 +12,7 @@ try:
     BASE_PATH = sys._MEIPASS
 except Exception:
     BASE_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
-FILE_NAME = '_file_types.json'
+FILE_NAME = 'file_types.json'
 
 
 class FileParsingApi():
@@ -24,9 +24,8 @@ class FileParsingApi():
             A list containing all known file names.
             If stored names file is empty, then returns None
         '''
-        with open(f'{BASE_PATH}/{FILE_NAME}') as f:
-            file_types = json.load(f)
-        if len(file_types) > 0:
+        file_types = self._load_data()
+        if file_types:
             return [ftype for ftype in file_types]
         else:
             return [None]
@@ -75,11 +74,11 @@ class FileParsingApi():
         results : bool
             True if file is known
         '''
-        with open(f'{BASE_PATH}/{FILE_NAME}') as f:
-            file_types = json.load(f)
-        for name in file_types:
-            if sorted(df.columns.values.tolist()) == sorted(file_types[name]['columns']):
-                return True
+        file_types = self._load_data()
+        if file_types:
+            for name in file_types:
+                if sorted(df.columns.values.tolist()) == sorted(file_types[name]['columns']):
+                    return True
         return False
     
 
@@ -114,8 +113,7 @@ class FileParsingApi():
                     'receiver_column': receiver_column
                     }
                 }
-        with open(f'{BASE_PATH}/{FILE_NAME}') as f:
-            old_data = json.load(f)
+        old_data = self._load_data()
         data.update(old_data)
         with open(f'{BASE_PATH}/{FILE_NAME}', 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
@@ -129,8 +127,7 @@ class FileParsingApi():
         filename : str
             Known filename to be popped out.
         '''
-        with open(f'{BASE_PATH}/{FILE_NAME}') as f:
-            file_types = json.load(f)
+        file_types = self._load_data()
         file_types.pop(filename, None)
         with open(f'{BASE_PATH}/{FILE_NAME}', 'w', encoding='utf-8') as f:
             json.dump(file_types, f, ensure_ascii=False, indent=4)
@@ -187,8 +184,7 @@ class FileParsingApi():
         File : dict
             Json dict containing information about the df.
         '''
-        with open(f'{BASE_PATH}/{FILE_NAME}') as f:
-            file_types = json.load(f)
+        file_types = self._load_data()
         for name in file_types:
             if sorted(df.columns.values.tolist()) == sorted(file_types[name]['columns']):
                 return file_types[name]
@@ -219,3 +215,11 @@ class FileParsingApi():
             dialect = csv.Sniffer().sniff(csv_file.read(), delimiters=[',', ';', '', '\t', '|'])
             separator = dialect.delimiter
         return encoding, separator
+    
+    def _load_data(self):
+        try:
+            with open(f'{BASE_PATH}/{FILE_NAME}') as f:
+                json_dict = json.load(f)
+        except FileNotFoundError:
+            json_dict = {}
+        return json_dict

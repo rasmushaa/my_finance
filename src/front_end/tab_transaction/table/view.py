@@ -5,11 +5,13 @@ from PyQt5 import QtCore
 import pandas as pd
 from .model import PandasModel
 from .combo import CategoryCombo
+from src.back_end.categories import CategoriesApi 
 
 
 class FinanceTableView(QtWidgets.QTableView):
-    def __init__(self, parent=None):
+    def __init__(self, active_user: str, parent=None):
         super().__init__(parent)
+        self._active_user = active_user
         self.window = parent
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.keyPressEvent = self._custom_navigation
@@ -20,7 +22,7 @@ class FinanceTableView(QtWidgets.QTableView):
         self.setModel(self.model)
 
         for i in range(self.model.rowCount()):
-            combo = CategoryCombo(row=i, parent=self)
+            combo = CategoryCombo(row=i, items=CategoriesApi().get_transaction_list(self._active_user), parent=self)
             self.setIndexWidget(self.model.index(i, self.model.columnCount()-1), combo)
 
         header = self.horizontalHeader()       
@@ -51,7 +53,7 @@ class FinanceTableView(QtWidgets.QTableView):
         preds_list_dict = self.window.ml_api.predict(receiver)
         preds_dict = preds_list_dict[0]
         preds = preds_dict.keys()
-        get_index_widget().set_prediction_categories(preds)
+        get_index_widget().set_categories(preds)
         get_index_widget().setFocus()
 
 

@@ -3,8 +3,8 @@
 import json
 import sys
 import os
-from PyQt5              import QtWidgets
-from PyQt5.QtWidgets    import QTabWidget, QAction
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QTabWidget, QAction
 from .dialog import AddProfileDialog, AddAssetDialog, AddTransactionDialog, SelectionDialog
 from src.front_end.tab_transaction import TabTransaction
 from src.front_end.tab_assets import TabAssets
@@ -20,7 +20,7 @@ try:
     BASE_PATH = sys._MEIPASS
 except Exception:
     BASE_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
-FILE_NAME = '_gui_state.json'
+FILE_NAME = 'gui_state.json'
 
 
 class GUI(QtWidgets.QMainWindow):
@@ -64,7 +64,9 @@ class GUI(QtWidgets.QMainWindow):
         def verify_user_list():
             user = ProfileApi().get_profile_names()[0] # If users list is empy, API returns [None]
             while user is None:
-                Message(msg=f'In order to use the application, at least one profile must be created', type='info', buttons='y').exec_()
+                dialog = Message(msg=f'In order to use the application, at least one profile must be created', type='info', buttons='yn')
+                if dialog.exec_() == QtWidgets.QMessageBox.Cancel:
+                     sys.exit()
                 self._add_profile()
                 user = ProfileApi().get_profile_names()[0]
         verify_user_list()
@@ -157,30 +159,32 @@ class GUI(QtWidgets.QMainWindow):
         file_dialog = AddTransactionDialog(parent=self)
         if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
                 inputs = file_dialog.selected_items()
-                CategoriesApi().add_transaction(name=inputs['name'])
+                CategoriesApi().add_transaction(name=inputs['name'], user_name=self.get_active_user())
                 self._init_tabs()
 
     def _remove_transaction(self):
-        values = CategoriesApi().get_transaction_list()
+        values = CategoriesApi().get_transaction_list(user_name=self.get_active_user())
         file_dialog = SelectionDialog(items=values, parent=self)
         if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
                 name = file_dialog.selected_items()
-                CategoriesApi().remove_transaction(name=name)
+                CategoriesApi().remove_transaction(name=name, user_name=self.get_active_user())
                 self._init_tabs()
 
     def _add_asset(self):
         file_dialog = AddAssetDialog(parent=self)
         if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
                 inputs = file_dialog.selected_items()
-                CategoriesApi().add_asset(name=inputs['name'], explanation=inputs['explanation'])
+                CategoriesApi().add_asset(name=inputs['name'], 
+                                          explanation=inputs['explanation'], 
+                                          user_name=self.get_active_user())
                 self._init_tabs()
 
     def _remove_asset(self):
-        values = CategoriesApi().get_assets_list()
+        values = CategoriesApi().get_assets_list(user_name=self.get_active_user())
         file_dialog = SelectionDialog(items=values, parent=self)
         if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
                 name = file_dialog.selected_items()
-                CategoriesApi().remove_asset(name=name)
+                CategoriesApi().remove_asset(name=name, user_name=self.get_active_user())
                 self._init_tabs()
 
     def _remove_banking_file(self):
@@ -191,11 +195,14 @@ class GUI(QtWidgets.QMainWindow):
                 FileParsingApi().remove_known_file(filename=name)
 
     def _train_model(self):
-         user = ProfileApi().get_user_class(target_name=self.get_active_user())
-         sql = f"SELECT receiver, category FROM {user.table_transactions} WHERE category != ''"
-         df = BqApi().pull_pd_from_bq(sql, project=user.bq_project)
-         MlApi().train_new_model(data=df, target_col='category', name=self.get_active_user())
-         Message(msg=f'A new ML model trained for user "{self.get_active_user()}"\nusing {df.shape[0]} rows from {user.table_transactions}', type='info', buttons='y').exec_()
-         probs = MlApi().get_propabilities(name=self.get_active_user())
-         CategoriesApi().update_transaction_list_order(probs)
-         self._init_tabs()
+        user = ProfileApi().get_user_class(target_name=self.get_active_user())
+        sql = f"SELECT receiver, category FROM {user.table_transactions} WHERE category != ''"
+        df = BqApi().pull_pd_from_bq(sql, project=user.bq_project)
+        if len(df) > 0:
+            MlApi().train_new_model(data=df, target_col='category', name=self.get_active_user())
+            Message(msg=f'A new ML model trained for user "{self.get_active_user()}"\nusing {df.shape[0]} rows from {user.table_transactions}', type='info', buttons='y').exec_()
+            probs = MlApi().get_propabilities(name=self.get_active_user())
+            CategoriesApi().update_transaction_list_order(probs, user_name=self.get_active_user())
+            self._init_tabs()
+        else:
+            Message(msg=f'There is not enough data in {user.table_transactions}\nMinimum number of rows is 1', type='warning', buttons='y').exec_()

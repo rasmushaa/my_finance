@@ -1,7 +1,7 @@
 {
     "UNREALIZED-CAPITAL-LOSSES": {
         "explanation": "The amount of losses in the period",
-        "order": 0
+        "order": 2
     },
     "CASH": {
         "order": 11,
@@ -16,7 +16,7 @@
         "explanation": "Theoretical value of the apartment"
     },
     "DIVIDENDS": {
-        "order": 2,
+        "order": 1,
         "explanation": "Received total dividends"
     },
     "OTHER-LOANS": {
@@ -32,7 +32,7 @@
         "explanation": "The amount ofstudent loand"
     },
     "CAPITAL-ASSETS-VALUE": {
-        "order": 1,
+        "order": 0,
         "explanation": "The current market value of all capital assets"
     },
     "REALIZED-CAPITAL-GAINS": {

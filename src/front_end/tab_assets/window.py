@@ -2,11 +2,9 @@
 
 from PyQt5 import QtWidgets
 from PyQt5 import Qt
-from PyQt5 import QtCore
 import pandas as pd
 from .table import AssetsTableView
 from src.front_end.utils import Message
-from src.back_end.parsing import FileParsingApi
 from src.back_end.bigquery import BqApi
 from src.back_end.profiles import ProfileApi
 
@@ -45,7 +43,7 @@ class TabAssets(QtWidgets.QWidget):
         grid.addWidget(self._start_button, 0, 2, 1, 1)
         grid.setColumnStretch(2, 0)
         # Table
-        self.table = AssetsTableView(parent=self)
+        self.table = AssetsTableView(active_user=self.gui.get_active_user(), parent=self)
         hbox = Qt.QHBoxLayout()
         hbox.addWidget(self.table)
         grid.addLayout(hbox, 1, 0, 1, 3)

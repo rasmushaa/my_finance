@@ -2,7 +2,7 @@
 
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
-from src.back_end.categories import CategoriesApi 
+
 
 class MyView(QtWidgets.QListView):
     def __init__(self, parent):
@@ -21,10 +21,11 @@ class MyView(QtWidgets.QListView):
     
 
 class CategoryCombo(QtWidgets.QComboBox):
-    def __init__(self, row: int, parent):
+    def __init__(self, row: int, items: list, parent):
         super().__init__(parent)
         self._parent = parent
         self._row = row
+        self._default_items = items
         self.addItems([''])
         self.currentTextChanged.connect(self.update_value)
         self.setView(MyView(parent=self))
@@ -36,14 +37,10 @@ class CategoryCombo(QtWidgets.QComboBox):
         self._parent.update_model(self.currentText(), row=self._row)
 
 
-    def set_prediction_categories(self, category_list: list):
+    def set_categories(self, category_list: list):
         self.clear()
         self.addItems(category_list)
 
-    def set_default_categories(self):
-        self.clear()
-        self.addItems(CategoriesApi().get_transaction_list())
-    
 
     def _custom_navigation(self, event):
         if event.key() == QtCore.Qt.Key_Left:
@@ -58,6 +55,6 @@ class CategoryCombo(QtWidgets.QComboBox):
             self._parent.update_model(self.currentText(), row=self._row)
             self._parent.set_focus_off_category()
         elif event.key() == QtCore.Qt.Key_Right:
-            self.set_default_categories()
+            self.set_categories(self._default_items)
             self.showPopup()
         return QtWidgets.QComboBox.keyPressEvent(self, event) # Passthrough all default key events

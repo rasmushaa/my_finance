@@ -1,23 +1,22 @@
 
 
 from PyQt5 import QtWidgets
-import pandas as pd
 from .model import PandasModel
 from src.back_end.categories.api import CategoriesApi
 
 
 class AssetsTableView(QtWidgets.QTableView):
-    def __init__(self, parent=None):
+    def __init__(self, active_user: str, parent=None):
         super().__init__(parent)
         self.window = parent
-        self._set_model()
+        self._set_model(user_name=active_user)
         self.verticalHeader().setSectionsMovable(True)
         self.verticalHeader().setDragEnabled(True)
         self.verticalHeader().sectionMoved.connect(self._update_indexing)
 
 
-    def _set_model(self,):
-        df = CategoriesApi().get_assets_df()
+    def _set_model(self, user_name):
+        df = CategoriesApi().get_assets_df(user_name=user_name)
         self._model = PandasModel(df)
         self.setModel(self._model)
         

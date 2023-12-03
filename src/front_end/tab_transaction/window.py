@@ -49,7 +49,7 @@ class TabTransaction(QtWidgets.QWidget):
         grid.addWidget(self._start_button, 0, 2, 1, 1)
         grid.setColumnStretch(2, 0)
         # Table
-        self.table = FinanceTableView(parent=self)
+        self.table = FinanceTableView(active_user=self.gui.get_active_user(), parent=self)
         hbox = Qt.QHBoxLayout()
         hbox.addWidget(self.table)
         grid.addLayout(hbox, 1, 0, 1, 3)

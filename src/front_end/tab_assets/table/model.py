@@ -45,7 +45,7 @@ class PandasModel(QtCore.QAbstractTableModel):
 				try:
 					value = pd.to_datetime(value, format='%Y-%m-%d').date()
 				except ValueError:
-					raise ValueError('Only "%Y-%m-%d" format is supported')
+					raise ValueError('Only %Y-%m-%d date format is supported')
 				self._df.iloc[:, [index.column()]] = value
 			if index.column() == 3:
 				try:

@@ -10,15 +10,14 @@ try:
     BASE_PATH = sys._MEIPASS
 except Exception:
     BASE_PATH = os.path.realpath(os.path.join(os.path.realpath(__file__), '..'))
-
-FILE_NAME = '_profiles.json'
+FILE_NAME = 'profiles.json'
 
 
 class ProfileApi():
 
     def get_profile_names(self):
         profiles = self._load_profiles_json()
-        if profiles is not None:
+        if profiles:
             return [name for name in profiles]
         else:
             return [None]
@@ -32,9 +31,12 @@ class ProfileApi():
                             table_transactions=profiles[name]['table_transactions'],
                             table_assets=profiles[name]['table_assets']
                             )
-        return [None]
+        return None
             
     def add_profile(self, name: str, bq_project: str, table_transactions: str, table_assets: str):
+        assert '.' in table_transactions, 'Transaction table must include dataset name ("." notation)'
+        assert '.' in table_assets, 'Assets table must include dataset name ("." notation)'
+
         data = {f'{name}':
                     {
                     'bq_project': bq_project,
@@ -58,5 +60,5 @@ class ProfileApi():
             with open(f'{BASE_PATH}/{FILE_NAME}') as f:
                 profiles = json.load(f)
         except FileNotFoundError:
-            profiles = None
+            profiles = {}
         return profiles
