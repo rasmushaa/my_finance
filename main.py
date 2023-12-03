@@ -11,7 +11,6 @@ def excepthook(exc_type, exc_value, exc_tb):
     msg_dialog = Message(msg=msg, type='critical', buttons='y')
     msg_dialog.exec_()
 
-
 def main():
     #sys.excepthook = excepthook
     global qapp

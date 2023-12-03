@@ -3,10 +3,8 @@
 import json
 import sys
 import os
-from PyQt5              import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets    import QWidget, QMenu, QAction, QProgressBar, QLabel, QFileDialog, QTabWidget, QVBoxLayout, QFormLayout, QLineEdit, QCheckBox, QGroupBox, QGridLayout
-from PyQt5.QtCore       import Qt, QThread, pyqtSignal
-from PyQt5.Qt import QDial, QSlider, QHBoxLayout, QPushButton, QFont, QMessageBox, QObject, QInputDialog
+from PyQt5              import QtWidgets
+from PyQt5.QtWidgets    import QTabWidget, QAction
 from .dialog import AddProfileDialog, AddAssetDialog, AddTransactionDialog, SelectionDialog
 from src.front_end.tab_transaction import TabTransaction
 from src.front_end.tab_assets import TabAssets
@@ -32,11 +30,10 @@ class GUI(QtWidgets.QMainWindow):
         self._load_state()
         self._init_window()
         self._init_menu_bar()
-        self._set_initial_user()
         self._init_tabs()
 
     def closeEvent(self, event):
-        self._update_state()
+        self._update_state() 
         with open(f'{BASE_PATH}/{FILE_NAME}', 'w') as f:
             json.dump(self._state, f, ensure_ascii=False, indent=4)
          
@@ -45,25 +42,38 @@ class GUI(QtWidgets.QMainWindow):
             with open(f'{BASE_PATH}/{FILE_NAME}', 'r') as f:
                 self._state = json.load(f)
         except FileNotFoundError:
-            self._update_state()
-    
-    def _update_state(self):
+            self._update_state(use_default=True)   
+
+    def _update_state(self, use_default=False):
         self._state = {}
-        self._state.update({'geometry': self.geometry().getRect()})
+        if use_default:
+            self._state.update({'geometry': self.geometry().getRect()})
+            self._state.update({'active_user': 'not_set'})   
+        else:
+            self._state.update({'geometry': self.geometry().getRect()})
+            self._state.update({'active_user': self.get_active_user()})
 
     def _init_window(self):
         (ax, ay, aw, ah) = self._state['geometry']
         self.setGeometry(ax, ay, aw, ah)
         self.setWindowTitle(f'My Finance')  
         self.show()
+        self._set_initial_user()
 
     def _set_initial_user(self):
-        user = ProfileApi().get_profile_names()[0]
-        while user is None:
-            Message(msg=f'In order to use the application, at least one profile must be created', type='info', buttons='y').exec_()
-            self._add_profile()
-            user = ProfileApi().get_profile_names()[0]
-        self._active_user = user
+        def verify_user_list():
+            user = ProfileApi().get_profile_names()[0] # If users list is empy, API returns [None]
+            while user is None:
+                Message(msg=f'In order to use the application, at least one profile must be created', type='info', buttons='y').exec_()
+                self._add_profile()
+                user = ProfileApi().get_profile_names()[0]
+        verify_user_list()
+        last_active_user = self._state['active_user']
+        users = ProfileApi().get_profile_names()
+        if last_active_user in users:
+            self._active_user = last_active_user
+        else:
+             self._active_user = users[0]
 
     def _init_tabs(self):
         self.tabs = QTabWidget()
@@ -72,7 +82,7 @@ class GUI(QtWidgets.QMainWindow):
         self.setCentralWidget(self.tabs)
 
     def get_active_user(self):
-         return self._active_user    
+        return self._active_user    
         
     def _init_menu_bar(self):
         self.menuBar().clear()

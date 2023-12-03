@@ -28,7 +28,7 @@
         "explanation": "All other assets, such as cars"
     },
     "STUDENT-LOAN": {
-        "order": 6,
+        "order": 5,
         "explanation": "The amount ofstudent loand"
     },
     "CAPITAL-ASSETS-VALUE": {
@@ -36,11 +36,11 @@
         "explanation": "The current market value of all capital assets"
     },
     "REALIZED-CAPITAL-GAINS": {
-        "order": 4,
+        "order": 6,
         "explanation": "The amount of received cahs flow from capital assets"
     },
     "UNREALIZED-CAPITAL-GAINS": {
-        "order": 5,
+        "order": 4,
         "explanation": "Current market value of unrealized capital gains"
     },
     "CAPITAL-ASSETS-PURCHASE-PRICE": {

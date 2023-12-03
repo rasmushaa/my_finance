@@ -32,9 +32,9 @@ class TabTransaction(QtWidgets.QWidget):
         user_label.setFont(Qt.QFont('Roboto', 22))
         vbox .addWidget(user_label)
         transaction_path = user.table_transactions
-        transaction_path = f"{transaction_path.split('.')[0]} - {transaction_path.split('.')[1]}"
+        transaction_path = f"{transaction_path.split('.')[0]}.{transaction_path.split('.')[1]}"
         transaction_label = QtWidgets.QLabel(transaction_path)
-        transaction_label.setFont(Qt.QFont('Roboto', 16))
+        transaction_label.setFont(Qt.QFont('Menlo', 14))
         vbox .addWidget(transaction_label)
         grid.addLayout(vbox , 0, 0, 1, 1)
         grid.setColumnStretch(0, 3)

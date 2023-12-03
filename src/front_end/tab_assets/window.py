@@ -28,10 +28,10 @@ class TabAssets(QtWidgets.QWidget):
         user_label.setFont(Qt.QFont('Roboto', 22))
         vbox .addWidget(user_label)
         assets_path = user.table_assets
-        assets_path = f"{assets_path.split('.')[0]} - {assets_path.split('.')[1]}"
+        assets_path = f"{assets_path.split('.')[0]}.{assets_path.split('.')[1]}"
         assets_label = QtWidgets.QLabel(assets_path)
-        assets_label.setFont(Qt.QFont('Roboto', 16))
-        vbox .addWidget(assets_label)
+        assets_label.setFont(Qt.QFont('Menlo', 14))
+        vbox.addWidget(assets_label)
         grid.addLayout(vbox , 0, 0, 1, 1)
         grid.setColumnStretch(0, 3)
         # Empty col

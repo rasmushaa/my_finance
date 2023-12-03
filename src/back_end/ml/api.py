@@ -2,7 +2,7 @@
 
 import pandas as pd
 import pickle
-from .model_beta import NB
+from .model_delta import NB
 import os
 import sys
 
