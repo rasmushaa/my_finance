@@ -10,7 +10,7 @@ added_files = [
 
 a = Analysis(
     ['main.py'],
-    pathex=['.', '/Users/rasmus/opt/miniconda3/envs/my_finance/lib/python3.10/site-packages'],
+    pathex=['.'],
     binaries=[],
     datas=added_files,
     hiddenimports=['pandas_gbq'],
@@ -56,5 +56,5 @@ app = BUNDLE(
     name='main.app',
     icon='src/assets/images/logo.icns',
     bundle_identifier=None,
-    version='1.1.1'
+    version='1.1.2'
 )
