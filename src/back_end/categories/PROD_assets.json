@@ -1,5 +1,5 @@
 {
-    "UNREALIZED-CAPITAL-LOSSES": {
+    "REALIZED-CAPITAL-LOSSES": {
         "explanation": "The amount of losses in the period",
         "order": 2
     },

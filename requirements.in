@@ -1,0 +1,8 @@
+chardet==5.2.0
+numpy==1.26.1
+pandas==2.1.2
+pandas_gbq==0.20.0
+PyQt5==5.15.10
+PyQt5_sip==12.13.0
+scipy==1.11.3
+pyinstaller==6.1.0
