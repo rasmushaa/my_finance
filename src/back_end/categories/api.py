@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import pandas as pd
+from datetime import datetime
 
 try:
     # PyInstaller creates a temp folder and stores path in _MEIPASS
@@ -43,7 +44,7 @@ class CategoriesApi():
         df = pd.DataFrame()
         df['category'] = self.get_assets_list(user_name=user_name)
         df['explanation'] = self.get_assets_list_explanations(user_name=user_name)
-        df['date'] = ""
+        df['date'] = datetime.today().strftime('%Y-%m-%d')
         df['value'] = 0.0
         df = df.astype({'category': 'str'})
         df = df.astype({'explanation': 'str'})
