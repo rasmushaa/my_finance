@@ -8,5 +8,10 @@
         "bq_project": "rasmus-prod",
         "table_transactions": "finance.transactions",
         "table_assets": "finance.assets"
+    },
+    "SANNA": {
+        "bq_project": "rasmus-prod",
+        "table_transactions": "finance_sanna.transactions",
+        "table_assets": "finance_sanna.assets"
     }
 }
