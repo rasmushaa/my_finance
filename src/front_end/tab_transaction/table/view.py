@@ -40,8 +40,12 @@ class FinanceTableView(QtWidgets.QTableView):
         return self.model.get_value_at(row=row, col=self.model.columnCount()-1)
     
 
-    def set_focus_off_category(self):
-        self.setCurrentIndex(self.model.index(self.currentIndex().row(), 0))
+    def set_focus_off_category(self, take_step: bool=False):
+        if take_step and self.currentIndex().row() < self.model.rowCount() - 1:
+            extra_step = 1
+        else:
+            extra_step = 0
+        self.setCurrentIndex(self.model.index(self.currentIndex().row() + extra_step, 0))
         self.setFocus()
 
 

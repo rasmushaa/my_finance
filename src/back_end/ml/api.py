@@ -25,7 +25,7 @@ class MlApi():
         if self._model is not None:
             return self._model.predict(X_string, X_numeric)
         else:
-            return [{'': 1}]
+            return [{'N/A': 1}]
 
 
     def load_model(self, name: str):
@@ -42,7 +42,7 @@ class MlApi():
 
     def train_new_model(self, data:pd.DataFrame, target_col:str, name='dev'):
 
-        data = data.loc[data[target_col].notnull()] # All rows must have a target
+        data = data.loc[(data[target_col].notnull()) & (data[target_col] != 'N/A')] # All rows must have a target
         data = data.fillna('') 
         X_numeric = data.select_dtypes(include=['float']).to_numpy()
         X_string = data.drop(target_col, axis=1).select_dtypes(include=['object']).to_numpy()

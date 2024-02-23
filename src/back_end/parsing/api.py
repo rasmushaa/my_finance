@@ -1,6 +1,7 @@
 
 
 import pandas as pd
+import numpy as np
 import chardet
 import csv
 import json
@@ -161,9 +162,9 @@ class FileParsingApi():
             df_temp['amount'] = df_temp['amount'].astype(str).str.replace(',', '.')
             df_temp = df_temp.astype({'amount': 'float'})
             df_temp = df_temp.astype({'receiver': 'str'})
-            df_temp['category'] = ''
+            df_temp['category'] = 'N/A'
             df_temp = df_temp.astype({'category': 'str'})
-            df_temp = df_temp.fillna("")    
+            df_temp = df_temp.fillna('')
             return df_temp
         else:
             return df_temp
