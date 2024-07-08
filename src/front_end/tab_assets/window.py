@@ -60,10 +60,14 @@ class TabAssets(QtWidgets.QWidget):
         df = self.table.get_df()
         user = ProfileApi().get_user_class(target_name=self.gui.get_active_user())
         latest_date = BqApi().get_latest_date(tabel=user.table_assets, project=user.bq_project)
-        min_date = pd.to_datetime(df['date'].min(), format='%Y-%m-%d')
-        if latest_date < min_date:
-            run_command()
-        else:
-            dialog = Message(msg=f'Warning\nThere already exists data after {min_date:%Y-%m-%d}\nProceed anyway?', type='warning', buttons='yn')
+        input_date = pd.to_datetime(df['date'].min(), format='%Y-%m-%d')
+        if latest_date > input_date:
+            dialog = Message(msg=f'Warning\nThere already exists data before {input_date:%Y-%m-%d}\nProceed anyway?', type='warning', buttons='yn')
             if dialog.exec_() == QtWidgets.QMessageBox.Ok:
                 run_command()
+        elif abs(input_date.month - latest_date.month) > 3:
+            dialog = Message(msg=f'Warning\nThere are empty Quarteres before {input_date.year} Q{input_date.month//4+1}\nProceed anyway?', type='warning', buttons='yn')
+            if dialog.exec_() == QtWidgets.QMessageBox.Ok:
+                run_command()
+        else:
+            run_command()

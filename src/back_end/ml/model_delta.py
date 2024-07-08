@@ -70,12 +70,17 @@ class NB():
         return np.array(X_str)
     
     def _transform_X_float(self, float_features: np.array) -> np.array:
-        X_float = np.empty(float_features.shape, dtype=object)
-        X_float[float_features > 0] = 'smallIncome'
-        X_float[float_features > 1500] = 'largeIncome'
-        X_float[float_features < 0] = 'smallExpenditure'
-        X_float[float_features < -50] = 'mediumExpenditure'
-        X_float[float_features < -200] = 'largeExpenditure'
+        X_float = np.empty((float_features.shape), dtype=object)
+
+        X_float[np.abs(float_features) >= 100] = 'largeAmount'
+        X_float[np.abs(float_features) < 100] = 'mediumAmount'
+        X_float[np.abs(float_features) < 20] = 'smallAmount'
+
+        X_float_sign = np.empty((float_features.shape), dtype=object)
+        X_float_sign[float_features >= 0] = 'positiveCashflow'
+        X_float_sign[float_features < 0] = 'negativeCashflow'
+
+        X_float = np.concatenate((X_float, X_float_sign), axis=1)
         return X_float
     
     def _transform_y(self, y: list) -> np.array:
